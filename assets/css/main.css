@@ -598,3 +598,10 @@ html, body { overflow-x: clip; }
 .legal-table td:first-child { width: 44%; color: var(--ink); font-weight: 500; }
 .legal-table td { color: var(--ink-soft); }
 .prose ul li strong { color: var(--ink); font-weight: 600; }
+/* Preview mode (only present in PREVIEW builds) */
+.preview-bar { position: fixed; z-index: 140; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: center; justify-content: center; padding: 8px 16px; background: var(--ink); color: var(--white); font-size: .78rem; line-height: 1.4; text-align: center; border-top: 3px solid var(--logo-orange); }
+.preview-bar strong { padding: 2px 8px; border-radius: 2px; background: var(--ribbon); color: var(--ink); font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; }
+body.is-preview { padding-bottom: 44px; }
+body.is-preview .cookie-banner { bottom: 64px; }
+.preview-notice { grid-column: 1 / -1; margin: 0; padding: 16px 20px; border-left: 3px solid var(--logo-orange); background: rgba(246,174,19,.1); font-size: .9rem; }
+@media (max-width: 639px) { .preview-bar span { font-size: .72rem; } body.is-preview .cookie-banner { bottom: 70px; } }
