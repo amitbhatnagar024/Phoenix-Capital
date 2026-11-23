@@ -279,6 +279,10 @@ export const orgSchema = () => {
 };
 
 /* ------------------------------------------------------------------ shell */
+// Preview mode: build with `PREVIEW=1 node build.mjs` for a non-live copy (e.g. GitHub Pages).
+// Adds a "Preview" bar, keeps search engines out and stops the forms from submitting.
+export const PREVIEW = process.env.PREVIEW === "1";
+const previewBar = `<div class="preview-bar" role="note"><strong>Preview</strong><span>This website is not yet live. Forms are switched off and enquiries cannot be sent.</span></div>`;
 export const page = ({ path, title, description, active = "", body, schema = [], ogImage, noindex = false, ogType = "website" }) => {
   // 404.html is served at arbitrary URLs, so it uses root-absolute links.
   const r = path.endsWith(".html") ? (to = "") => "/" + to : relTo(path);
@@ -286,14 +290,14 @@ export const page = ({ path, title, description, active = "", body, schema = [],
   const og = ogImage && /^https?:/.test(ogImage) ? ogImage : `${site.domain}/${ogImage || "assets/img/og-default.jpg"}`;
   const ld = { "@context": "https://schema.org", "@graph": [...orgSchema(), ...schema] };
   return `<!doctype html>
-<html lang="en-GB">
+<html lang="en-GB"${PREVIEW ? ' data-preview="1"' : ""}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${url}">
-${noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robots" content="index, follow, max-image-preview:large">'}
+${PREVIEW ? '<meta name="robots" content="noindex, nofollow">' : noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robots" content="index, follow, max-image-preview:large">'}
 <meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="Phoenix Capital">
 <meta property="og:locale" content="en_GB">
@@ -319,7 +323,8 @@ ${noindex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robo
 <script>document.documentElement.classList.add("js")</script>
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 </head>
-<body>
+<body${PREVIEW ? ' class="is-preview"' : ""}>
+${PREVIEW ? previewBar : ""}
 ${header(r, active)}
 <main id="main">
 ${body(r)}

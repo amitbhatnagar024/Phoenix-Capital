@@ -188,6 +188,7 @@
       });
       if (invalid.length) {
         if (errorBox) {
+          $("strong", errorBox).textContent = "Please check the following:";
           var list = $("ul", errorBox); list.innerHTML = "";
           invalid.forEach(function (el) {
             var f = fieldOf(el), lab = f && $("label, .label, legend", f);
@@ -202,6 +203,10 @@
       }
       if (errorBox) errorBox.hidden = true;
       if ($(".hp input", form) && $(".hp input", form).value) return; // spam trap
+      if (root.dataset.preview === "1") { // preview copy: never submit
+        if (errorBox) { $("strong", errorBox).textContent = "Preview only"; $("ul", errorBox).innerHTML = "<li>This is a preview of the website, so the form is switched off and nothing has been sent.</li>"; errorBox.hidden = false; errorBox.focus(); }
+        return;
+      }
       var btn = $("[type=submit]", form), label = btn.innerHTML;
       btn.disabled = true; btn.textContent = "Sending…";
       var done = function (ok) {

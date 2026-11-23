@@ -1,6 +1,6 @@
 // Page definitions. Each returns { path, title, description, active, body, schema }.
 import { site, keyTerms, compliance, products, cases, testimonials, team, brokerContacts, articles, insightCategories } from "./config.mjs";
-import { esc, img, icon, arrow, markImg, watermark, pageHero, termsStrip, riskNote, ctaBand, breadcrumbSchema, imgAbs } from "./layout.mjs";
+import { esc, img, icon, arrow, markImg, watermark, pageHero, termsStrip, riskNote, ctaBand, breadcrumbSchema, imgAbs, PREVIEW } from "./layout.mjs";
 
 const fmtDate = (iso) => new Date(iso + "T12:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 
@@ -87,6 +87,7 @@ const consentBox = (id, text, msg) => `
   <label class="consent" for="${id}"><input type="checkbox" id="${id}" name="${id}" value="yes" required data-required="${esc(msg)}" aria-describedby="${id}-error"><span>${esc(text)}<span class="req" aria-hidden="true"> *</span></span></label>
   <span class="field__error" id="${id}-error" aria-live="polite"></span>
 </div>`;
+const previewNotice = PREVIEW ? `<p class="preview-notice" role="note"><strong>Preview:</strong> this form is switched off while the website is being finalised. Nothing you enter will be sent.</p>` : "";
 const errorSummary = `<div class="form-errors" role="alert" tabindex="-1" hidden><strong>Please check the following:</strong><ul></ul></div>`;
 const honeypot = `<div class="hp" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>`;
 
@@ -394,7 +395,7 @@ ${pageHero(r, { crumbs: [["Brokers", "brokers/"]], eyebrow: "Brokers & introduce
     </div>
     <div class="md-5-12">
       <form class="form" action="${site.brokerEndpoint}" method="post" novalidate data-validate data-success="broker-success">
-        ${errorSummary}
+        ${previewNotice}${errorSummary}
         <fieldset class="form__section"><legend><span>01</span> Your firm</legend>
           ${field({ id: "firm_name", label: "Firm name", required: true, autocomplete: "organization", msg: "Please enter your firm name." })}
           ${field({ id: "fca_frn", label: "FCA firm reference number", hint: "If applicable", attrs: 'inputmode="numeric" pattern="[0-9]{6,7}" data-pattern="FRNs are six or seven digits."' })}
@@ -575,7 +576,7 @@ ${pageHero(r, { crumbs: [["Contact", "contact/"]], eyebrow: "Submit an enquiry",
     <div class="md-1-8">
       <h2 class="sr-only" id="form-title">Deal enquiry form</h2>
       <form class="form" action="${site.enquiryEndpoint}" method="post" novalidate data-validate data-success="enquiry-success">
-        ${errorSummary}
+        ${previewNotice}${errorSummary}
         <fieldset class="form__section"><legend><span>01</span> About you</legend>
           ${field({ id: "name", label: "Full name", required: true, autocomplete: "name", msg: "Please enter your name." })}
           ${field({ id: "company", label: "Company", autocomplete: "organization", hint: "If applicable" })}

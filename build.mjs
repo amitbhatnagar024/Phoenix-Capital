@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import { site } from "./src/config.mjs";
-import { page } from "./src/layout.mjs";
+import { page, PREVIEW } from "./src/layout.mjs";
 import { pages } from "./src/pages.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -41,7 +41,7 @@ const urls = pages.filter((p) => !p.noindex).map((p) => {
   return `  <url><loc>${site.domain}/${p.path}</loc><lastmod>${today}</lastmod><priority>${pr}</priority></url>`;
 });
 write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
-write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${site.domain}/sitemap.xml\n`);
+write("robots.txt", PREVIEW ? `# Preview copy: not for search engines\nUser-agent: *\nDisallow: /\n` : `User-agent: *\nAllow: /\n\nSitemap: ${site.domain}/sitemap.xml\n`);
 
 // Hosting helpers: security headers (Netlify / Cloudflare Pages format)
 write("_headers", `/*
@@ -56,5 +56,5 @@ write("_headers", `/*
   Cache-Control: public, max-age=31536000, immutable
 `);
 
-console.log(`Built ${pages.length} pages into dist/`);
+console.log(`Built ${pages.length} pages into dist/${PREVIEW ? " (PREVIEW mode)" : ""}`);
 if (!existsSync(join(DIST, "assets/img/og-default.jpg"))) console.warn("Note: assets/img/og-default.jpg missing — run tools/render_assets.py");

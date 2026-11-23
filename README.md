@@ -12,6 +12,9 @@ build.mjs      ← regenerates dist/ (requires Node 18+): `node build.mjs`
 tools/         ← image, OG-card and PDF generators; screenshot script
 ```
 
+## Preview mode (GitHub Pages copy)
+`PREVIEW=1 node build.mjs` builds a preview copy. It shows a "Preview" bar, switches the forms off, and tells search engines not to index it (noindex, plus robots.txt `Disallow: /`). The `main` branch on GitHub currently holds this preview build. **For the real launch, build without PREVIEW** (`node build.mjs`).
+
 ## Preview locally
 Open `dist/index.html` in a browser, or for exact production behaviour run `npx serve dist` (or `python3 -m http.server -d dist`) and visit http://localhost:3000.
 
